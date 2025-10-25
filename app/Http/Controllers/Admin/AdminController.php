@@ -18,6 +18,14 @@ class AdminController extends Controller
         $users = User::count();
         $news_letter_users = User::where('news_letter', true)->count();
 
-        return view('admin.index', compact('categories', 'posts', 'tags', 'users', 'news_letter_users'));
+        $statistics  = [
+            ['label' => 'Categories', 'value' => $categories],
+            ['label' => 'Posts', 'value' => $posts],
+            ['label' => 'Tags', 'value' => $tags],
+            ['label' => 'Users', 'value' => $users],
+            ['label' => 'Newsletter Subscribers', 'value' => $news_letter_users],
+        ];
+
+        return view('admin.index', compact('statistics'));
     }
 }
