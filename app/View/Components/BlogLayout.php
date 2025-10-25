@@ -29,7 +29,10 @@ class BlogLayout extends Component
      */
     public function render()
     {
-        $categories = Category::select('id', 'name', 'slug')->get();
+        $categories = Category::whereNull('parent_id')
+            ->with('childrenRecursive')
+            ->orderBy('name')
+            ->get();
         $top_users = User::withCount('posts')->orderByDesc('posts_count')->take(5)->get();
         $setting = Setting::first();
         $pages_nav = Page::select('id', 'name', 'slug')->whereNavbar(true)->orderByDesc('id')->get();

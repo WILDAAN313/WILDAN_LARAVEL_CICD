@@ -20,7 +20,7 @@
     </style>
 
     <!-- AlpineJS -->
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
         integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
@@ -111,16 +111,14 @@
             </a>
         </div>
         <div :class="open ? 'block' : 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
-            <div
-                class="w-full container mx-auto flex flex-col sm:flex-row items-center justify-center text-sm font-bold uppercase mt-0 px-6 py-2">
-                <a href="{{ route('webhome') }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Home</a>
-                @forelse ($categories as $category)
-                    <a href="{{ route('category.show', $category->slug) }}"
-                        class="hover:bg-gray-400 rounded py-2 px-4 mx-2">{{ $category->name }}</a>
-                @empty
-                    No Categories !
-                @endforelse
+            <div class="w-full container mx-auto">
+                @include('front.partials.category-menu', [
+                    'categories' => $categories,
+                    'level' => 0,
+                    'orientation' => 'horizontal',
+                ])
             </div>
+
         </div>
     </nav>
 
@@ -171,8 +169,7 @@
                     </div>
                     @forelse ($top_users as $top)
                         <div class="my-1.5 py-3	px-4 flex justify-center rounded-lg shadow-lg bg-white w-full ">
-                                <img class="w-10 h-10 rounded-full" src="{{ $top->avatar }}"
-                                    alt="">
+                            <img class="w-10 h-10 rounded-full" src="{{ $top->avatar }}" alt="">
                             <div class="content flex justify-between py-2 w-full">
                                 <div class="px-2 justify-between">
                                     {{ $top->name }}
@@ -198,7 +195,8 @@
         <div class="w-full container mx-auto flex flex-col items-center">
             <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between py-6">
                 @foreach ($pages_footer as $page)
-                    <a href="{{ route('page.show', $page->slug) }}" class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
+                    <a href="{{ route('page.show', $page->slug) }}"
+                        class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
                 @endforeach
             </div>
             <div class="uppercase pb-6">&copy; {{ $setting->copy_rights }}</div>
