@@ -10,7 +10,8 @@
         @endisset {{ config('app.name') }}
     </title>
     <!-- Tailwind -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    @vite(['resources/css/blog.css', 'resources/js/blog.js'])
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet"> --}}
     <style>
         @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
 

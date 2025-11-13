@@ -1,97 +1,73 @@
 <x-admin-layout>
-    <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
-        <main class="w-full flex-grow p-6">
-            <h1 class="w-full text-3xl text-black pb-6">Categories</h1>
-
-            <div class="w-full mt-12">
-                <p class="text-xl pb-3 flex items-center">
-                    <i class="fas fa-list mr-3"></i> Categories Records
-                </p>
-
+    <div class="w-full min-h-screen bg-gray-50 flex flex-col">
+        <main class="flex-grow p-8">
+            <!-- Page Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-semibold text-gray-800">Categories</h1>
+                    <p class="text-gray-500">Manage and organize your categories efficiently.</p>
+                </div>
                 <button
-                    class="px-4 py-1 text-white font-light tracking-wider bg-blue-600 rounded mb-2"
-                    onclick="location.href='{{ route('admin.category.create') }}';">
-                    Add Category
+                    onclick="location.href='{{ route('admin.category.create') }}'"
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700 transition">
+                    <i class="fas fa-plus mr-2"></i> Add Category
                 </button>
+            </div>
 
-                <div class="bg-white overflow-auto rounded shadow">
-                    <table class="text-left w-full border-collapse">
-                        <thead>
+            <!-- Table -->
+            <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-left text-sm text-gray-700">
+                        <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-semibold tracking-wider">
                             <tr>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">ID</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Name</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Slug</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Parent</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Children</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Added by</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Manage</th>
+                                <th class="py-4 px-6">#</th>
+                                <th class="py-4 px-6">Name</th>
+                                <th class="py-4 px-6">Slug</th>
+                                <th class="py-4 px-6">Parent</th>
+                                <th class="py-4 px-6">Children</th>
+                                <th class="py-4 px-6">Added By</th>
+                                <th class="py-4 px-6 text-right">Actions</th>
                             </tr>
                         </thead>
-
-                        <tbody>
+                        <tbody class="divide-y divide-gray-100">
                             @forelse ($categories as $category)
-                                <tr class="hover:bg-grey-lighter">
-                                    <td class="py-4 px-6 border-b border-grey-light">{{ $category->id }}</td>
-
-                                    {{-- الاسم --}}
-                                    <td class="py-4 px-6 border-b border-grey-light font-medium">
-                                        {{ $category->name }}
-                                    </td>
-
-                                    {{-- السلاج --}}
-                                    <td class="py-4 px-6 border-b border-grey-light text-gray-600">
-                                        {{ $category->slug }}
-                                    </td>
-
-                                    {{-- اسم الأب --}}
-                                    <td class="py-4 px-6 border-b border-grey-light">
-                                        {{ optional($category->parent)->name ?? '—' }}
-                                    </td>
-
-                                    {{-- عدد الأبناء --}}
-                                    <td class="py-4 px-6 border-b border-grey-light">
-                                        <span class="inline-flex items-center text-xs px-2 py-1 rounded bg-gray-100">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="py-3 px-6 font-medium text-gray-800">{{ $category->id }}</td>
+                                    <td class="py-3 px-6">{{ $category->name }}</td>
+                                    <td class="py-3 px-6 text-gray-500">{{ $category->slug }}</td>
+                                    <td class="py-3 px-6">{{ optional($category->parent)->name ?? '—' }}</td>
+                                    <td class="py-3 px-6">
+                                        <span class="inline-flex items-center text-xs font-medium px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
                                             {{ $category->children_count ?? $category->children->count() }}
                                         </span>
                                     </td>
+                                    <td class="py-3 px-6">{{ optional($category->user)->name ?? '—' }}</td>
+                                    <td class="py-3 px-6 text-right space-x-2">
+                                        <a href="{{ route('admin.category.edit', $category->id) }}"
+                                           class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition">
+                                            <i class="fas fa-edit mr-1"></i> Edit
+                                        </a>
 
-                                    {{-- المضاف بواسطة --}}
-                                    <td class="py-4 px-6 border-b border-grey-light">
-                                        {{ optional($category->user)->name ?? '—' }}
-                                    </td>
-
-                                    {{-- إدارة --}}
-                                    <td class="py-4 px-6 border-b border-grey-light space-x-2 whitespace-nowrap">
-                                        <button
-                                            class="px-4 py-1 text-white font-light tracking-wider bg-green-600 rounded"
-                                            type="button"
-                                            onclick="location.href='{{ route('admin.category.edit', $category->id) }}';">
-                                            Edit
-                                        </button>
-
-                                        <form method="POST"
-                                              style="display:inline"
-                                              action="{{ route('admin.category.destroy', $category->id) }}"
-                                              onsubmit="return confirm('Are you sure?')">
+                                        <form action="{{ route('admin.category.destroy', $category->id) }}"
+                                              method="POST" class="inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this category?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="px-4 py-1 text-white font-light tracking-wider bg-red-600 rounded" type="submit">
-                                                Delete
+                                            <button type="submit"
+                                                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 transition">
+                                                <i class="fas fa-trash mr-1"></i> Delete
                                             </button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="py-6 px-6 text-center text-gray-500">
-                                        No categories found.
-                                    </td>
+                                    <td colspan="7" class="py-6 text-center text-gray-500">No categories found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </main>
     </div>

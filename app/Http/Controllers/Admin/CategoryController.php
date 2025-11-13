@@ -31,7 +31,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::pluck('name', 'id')->toArray();
 
         return view('admin.category.create', compact('categories'));
     }
@@ -68,9 +68,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $categories = Category::where('id', '!=', $category->id)
-            ->orderBy('name')
-            ->get();
+        $categories = Category::where('id', '!=', $category->id)->pluck('name', 'id')->toArray();
 
         return view('admin.category.edit', compact('category', 'categories'));
     }

@@ -1,46 +1,66 @@
 <x-admin-layout>
+    <div class="w-full min-h-screen bg-gray-50 flex flex-col">
+        <main class="flex-grow p-8">
+            <!-- Page Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-semibold text-gray-800">Users</h1>
+                    <p class="text-gray-500">Manage users and assign roles easily.</p>
+                </div>
+            </div>
 
-    <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
-        <main class="w-full flex-grow p-6">
-            <h1 class="w-full text-3xl text-black pb-6">Users</h1>
-
-            <div class="w-full mt-12">
-                <p class="text-xl pb-3 flex items-center">
-                    <i class="fas fa-list mr-3"></i> Users Records
-                </p>
-                <div class="bg-white overflow-auto">
-                    <table class="text-left w-full border-collapse">
-                        <thead>
+            <!-- Table -->
+            <div class="bg-white shadow-sm rounded-xl overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-left text-sm text-gray-700">
+                        <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-semibold tracking-wider">
                             <tr>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">ID</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Name</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Role Name</th>
-                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Manage</th>
+                                <th class="py-4 px-6">#</th>
+                                <th class="py-4 px-6">Name</th>
+                                <th class="py-4 px-6">Role</th>
+                                <th class="py-4 px-6 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($users as $user)
-                            <tr class="hover:bg-grey-lighter">
-                                <td class="py-4 px-6 border-b border-grey-light">{{ $user->id }}</td>
-                                <td class="py-4 px-6 border-b border-grey-light">{{ $user->name }}</td>
-                                <td class="py-4 px-6 border-b border-grey-light">{{ $user->role->name }}</td>
-                                <td class="py-4 px-6 border-b border-grey-light">
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse ($users as $user)
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="py-3 px-6 font-medium text-gray-800">{{ $user->id }}</td>
+                                    <td class="py-3 px-6">{{ $user->name }}</td>
+                                    <td class="py-3 px-6">
+                                        <span class="inline-flex items-center text-xs font-medium px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
+                                            {{ $user->role->name ?? '—' }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-6 text-right space-x-2">
+                                        <a href="{{ route('admin.user.edit', $user->id) }}"
+                                           class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition">
+                                            <i class="fas fa-user-shield mr-1"></i> Assign Role
+                                        </a>
 
-                                    <button class="px-4 py-1 text-white font-light tracking-wider bg-green-600 rounded" type="button"  onclick="location.href='{{ route('admin.user.edit', $user->id) }}';">Assign Role</button>
-                                    <form type="submit" method="POST" style="display: inline" action="{{ route('admin.user.destroy', $user->id)}}" onsubmit="return confirm('Are you sure?')">
-                                        @csrf
-                                        @method('DELETE')
-                                    <button class="px-4 py-1 text-white font-light tracking-wider bg-red-600 rounded" type="submit">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-
+                                        <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" class="inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 transition">
+                                                <i class="fas fa-trash mr-1"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-gray-500">No users found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <div class="mt-6">
                 {!! $users->links() !!}
+            </div>
         </main>
     </div>
 </x-admin-layout>
-

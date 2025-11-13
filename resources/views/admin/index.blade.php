@@ -1,5 +1,5 @@
 <x-admin-layout>
-    <div class="w-full h-screen overflow-x-hidden border-t flex flex-col bg-gray-50">
+    <div class="w-full overflow-x-hidden border-t flex flex-col bg-gray-50">
         <main class="w-full flex-grow p-8">
             <div class="flex items-center mb-8">
                 <i class="fas fa-chart-bar text-blue-600 text-2xl mr-3"></i>
