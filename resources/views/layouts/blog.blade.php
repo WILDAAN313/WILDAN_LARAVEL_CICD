@@ -66,7 +66,10 @@
                     @foreach ($pages_nav as $page)
                         <li>
                             <a href="{{ route('page.show', $page->slug) }}"
-                                class="text-slate-100/90 hover:text-white transition-colors">
+                                class="transition-colors
+               {{ request()->routeIs('page.show') && request('slug') == $page->slug
+                   ? 'text-white font-semibold'
+                   : 'text-slate-100/90 hover:text-white' }}">
                                 {{ $page->name }}
                             </a>
                         </li>
@@ -228,7 +231,11 @@
         <div class="max-w-7xl mx-auto px-6 py-8 text-center text-sm text-gray-600">
             <p class="mb-4">
                 @foreach ($pages_footer as $page)
-                    <a href="{{ route('page.show', $page->slug) }}" class="px-3 hover:text-gray-800">
+                    <a href="{{ route('page.show', $page->slug) }}"
+                        class="px-3 transition-colors
+           {{ request()->routeIs('page.show') && request('slug') == $page->slug
+               ? 'text-gray-900 font-semibold'
+               : 'hover:text-gray-800' }}">
                         {{ $page->name }}
                     </a>
                 @endforeach

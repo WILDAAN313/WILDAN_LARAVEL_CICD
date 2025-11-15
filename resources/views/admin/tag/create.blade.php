@@ -61,7 +61,7 @@
 
                                 <button type="submit"
                                     class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700 transition">
-                                    <i class="fas fa-plus mr-2"></i> Add Tag
+                                    <i class="fas fa-save mr-2"></i> Add Tag
                                 </button>
                             </div>
                         </div>

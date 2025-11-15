@@ -25,9 +25,11 @@
             {{-- Meta --}}
             <div class="flex items-center gap-3 text-xs sm:text-sm text-gray-500 mb-3">
                 <div class="flex items-center gap-2">
-                    <i class="fas fa-user-circle text-gray-400"></i>
+                    <img src="{{ $post->user->avatar }}" alt="{{ $post->user->name }}"
+                        class="w-8 h-8 rounded-full object-cover border border-gray-300">
                     <span class="font-medium text-gray-700">{{ $post->user->name }}</span>
                 </div>
+
 
                 <span class="text-gray-300">•</span>
 

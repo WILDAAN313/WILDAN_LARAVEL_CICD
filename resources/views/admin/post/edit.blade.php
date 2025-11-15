@@ -139,7 +139,7 @@
 
                                 <button type="submit"
                                     class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-700 transition">
-                                    <i class="fas save mr-2"></i>
+                                    <i class="fas fa-save mr-2"></i>
                                     Update Post
                                 </button>
                             </div>
