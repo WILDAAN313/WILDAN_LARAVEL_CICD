@@ -4,7 +4,7 @@
 
 
         <!-- Article -->
-       <x-post-list :posts="$tags" />
+       <x-post-list :posts="$posts" />
 
     </section>
 </x-blog-layout>
