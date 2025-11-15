@@ -7,203 +7,239 @@
     <title>
         @isset($title)
             {{ ucfirst($title) }} -
-        @endisset {{ config('app.name') }}
+        @endisset
+        {{ config('app.name') }}
     </title>
-    <!-- Tailwind -->
-    @vite(['resources/css/blog.css', 'resources/js/blog.js'])
-    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet"> --}}
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
 
-        .font-family-karla {
-            font-family: karla;
+    @vite(['resources/css/blog.css', 'resources/js/blog.js'])
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card-hover {
+            transition: .2s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
         }
     </style>
-
-    <!-- AlpineJS -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
-        integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <!-- Icons -->
 </head>
 
-<body class="bg-white font-family-karla">
-    @if (Session::has('message'))
-        <div class="flex items-center bg-green-500 text-white text-sm font-bold px-4 py-3" role="alert">
-            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
-            </svg>
-            <p>{{ Session::get('message') }}.</p>
-        </div>
-    @elseif (Session::has('error'))
-        {
-        <div class="flex items-center bg-red-500 text-white text-sm font-bold px-4 py-3" role="alert">
-            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
-            </svg>
-            <p>{{ Session::get('error') }}.</p>
-        </div>
-        }
-    @endif
-    <!-- Top Bar Nav -->
-    <nav class="w-full py-4 bg-blue-800 shadow">
-        <div class="w-full container mx-auto flex flex-wrap items-center justify-between">
+<body class="bg-gray-100">
 
-            <nav>
-                <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
-                    @foreach ($pages_nav as $page)
-                        <li><a class="hover:text-gray-200 hover:underline px-4"
-                                href="{{ route('page.show', $page->slug) }}">{{ $page->name }}</a></li>
-                    @endforeach
-
-                    @auth
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="py-2 px-4 bg-red-500 hover:bg-red-700">LogOut</button>
-                        </form>
-                    @else
-                        <li><a class="py-2 px-4 mr-2 bg-gray-500 hover:bg-gray-700"
-                                href="{{ route('register') }}">Register</a>
-                        <li><a class="py-2 px-4 bg-green-500 hover:bg-green-700" href="{{ route('login') }}">Login</a>
-                        @endauth
-
-                </ul>
-            </nav>
-
-            <div class="flex items-center text-lg no-underline text-white pr-6">
-                <a class="" href="{{ $setting->url_fb }}">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_insta }}">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_twitter }}">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_linkedin }}">
-                    <i class="fab fa-linkedin"></i>
-                </a>
+    {{-- Flash Messages --}}
+    @if (Session::has('message') || Session::has('error'))
+        <div class="max-w-7xl mx-auto px-6 mt-6" x-data="{ show: true }" x-show="show">
+            <div class="rounded-lg border bg-white shadow p-4 flex items-start gap-3">
+                <i
+                    class="fas {{ Session::has('message') ? 'fa-check text-green-600' : 'fa-exclamation-triangle text-red-600' }} mt-1"></i>
+                <p class="text-gray-700 text-sm flex-1">
+                    {{ Session::get('message') ?? Session::get('error') }}
+                </p>
+                <button @click="show=false">
+                    <i class="fas fa-times text-gray-400 hover:text-gray-600"></i>
+                </button>
             </div>
         </div>
+    @endif
 
+    {{-- Top Bar --}}
+    <nav class="w-full bg-blue-600 border-b shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+
+            <div class="flex items-center gap-6">
+                {{-- Logo --}}
+                <a href="{{ route('webhome') }}"
+                    class="font-semibold text-white text-lg hover:text-slate-100 transition-colors">
+                    {{ config('app.name') }}
+                </a>
+
+                {{-- Links --}}
+                <ul class="hidden md:flex items-center gap-4 text-sm font-medium text-slate-100">
+                    @foreach ($pages_nav as $page)
+                        <li>
+                            <a href="{{ route('page.show', $page->slug) }}"
+                                class="text-slate-100/90 hover:text-white transition-colors">
+                                {{ $page->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+
+            <div class="flex items-center gap-4">
+
+                {{-- Social Icons --}}
+                <div class="hidden md:flex items-center gap-3">
+                    @if ($setting->url_fb)
+                        <a href="{{ $setting->url_fb }}" target="_blank" class="text-white/80 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07C2 17.1 5.66 21.24 10.44 22v-6.99H7.9v-2.94h2.54V9.84c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.62.77-1.62 1.56v1.88h2.76l-.44 2.94h-2.32V22C18.34 21.24 22 17.1 22 12.07z" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    @if ($setting->url_insta)
+                        <a href="{{ $setting->url_insta }}" target="_blank" class="text-white/80 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm4.5-.25a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5z" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    @if ($setting->url_twitter)
+                        <a href="{{ $setting->url_twitter }}" target="_blank" class="text-white/80 hover:text-white">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M22.46 6c-.77.35-1.6.58-2.46.69A4.29 4.29 0 0 0 21.86 4a8.59 8.59 0 0 1-2.72 1.04A4.28 4.28 0 0 0 11.14 8c0 .34.04.68.12 1A12.17 12.17 0 0 1 3.16 4.9a4.28 4.28 0 0 0 1.32 5.71 4.27 4.27 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.43 4.2 4.29 4.29 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.97A8.59 8.59 0 0 1 2 19.54a12.1 12.1 0 0 0 6.56 1.92c7.88 0 12.2-6.53 12.2-12.2 0-.19 0-.38-.01-.57A8.72 8.72 0 0 0 22.46 6z" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    @if ($setting->url_linkedin)
+                        <a href="{{ $setting->url_linkedin }}" target="_blank" class="text-white/80 hover:text-white">
+                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M6.94 6.5A2.44 2.44 0 1 1 7 1.62a2.44 2.44 0 0 1-.06 4.88zM4.5 8h5v12h-5zm7 0h4.8v1.75h.07c.67-1.27 2.32-2.6 4.78-2.6C22.44 7.15 24 9 24 12.36V20h-5v-7.1c0-1.84-.66-3.1-2.3-3.1-1.25 0-2 .84-2.33 1.66-.12.3-.15.71-.15 1.13V20h-5z" />
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+
+                {{-- Auth --}}
+                @auth
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button
+                            class="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow
+                   hover:bg-red-700 transition">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('register') }}"
+                        class="px-4 py-2 bg-white text-blue-600 text-sm font-semibold rounded-lg shadow-sm
+              hover:bg-slate-100 transition">
+                        Register
+                    </a>
+
+                    <a href="{{ route('login') }}"
+                        class="px-4 py-2 bg-blue-700 text-white text-sm font-semibold rounded-lg shadow
+              hover:bg-blue-800 transition">
+                        Login
+                    </a>
+                @endauth
+
+
+            </div>
+        </div>
     </nav>
 
-    <!-- Text Header -->
-    <header class="w-full container mx-auto">
-        <div class="flex flex-col items-center py-12">
-            <a class="font-bold text-gray-800 uppercase hover:text-gray-700 text-5xl" href="{{ route('webhome') }}">
-                {{ $setting->site_name }}
-            </a>
-            <p class="text-lg text-gray-600">
+    {{-- Site Header --}}
+    <header class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-6 py-10 text-center">
+            <h1 class="text-4xl font-bold text-gray-800">{{ $setting->site_name }}</h1>
+            <p class="mt-2 text-gray-500 text-sm">
                 {{ $setting->description }}
             </p>
         </div>
     </header>
 
-    <!-- Topic Nav -->
-    <nav class="w-full py-4 border-t border-b bg-gray-100" x-data="{ open: false }">
-        <div class="block sm:hidden">
-            <a href="#"
-                class="block md:hidden text-base font-bold uppercase text-center flex justify-center items-center"
-                @click="open = !open">
-                Topics <i :class="open ? 'fa-chevron-down' : 'fa-chevron-up'" class="fas ml-2"></i>
-            </a>
+    {{-- Topics --}}
+    <div class="bg-white border-b py-3">
+        <div class="max-w-7xl mx-auto px-6">
+            @include('front.partials.category-menu', [
+                'categories' => $categories,
+                'level' => 0,
+                'orientation' => 'horizontal',
+            ])
         </div>
-        <div :class="open ? 'block' : 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
-            <div class="w-full container mx-auto">
-                @include('front.partials.category-menu', [
-                    'categories' => $categories,
-                    'level' => 0,
-                    'orientation' => 'horizontal',
-                ])
-            </div>
-
-        </div>
-    </nav>
-
-
-    <div class="container mx-auto flex flex-wrap py-6">
-
-        {{ $slot }}
-
-        <!-- Sidebar Section -->
-        @if (!request()->routeIs('page.show'))
-            <aside class="w-full md:w-1/3 flex flex-col items-center px-3">
-
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">About Us</p>
-                    <p class="pb-2">{{ $setting->about }}</p>
-                    {{-- <a href="#"
-                    class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-4">
-                    Get to know us
-                </a> --}}
-                </div>
-
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">Tags</p>
-                    <div class="flex flex-wrap">
-
-                        @foreach ($tags as $tag)
-                            <a href="{{ route('tag.show', $tag->name) }}"
-                                class="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-blue-700 bg-blue-100 border border-blue-300 ">
-                                <div class="p-1.5 text-xs font-normal leading-none max-w-full flex-initial">
-                                    {{ $tag->name }}</div>
-                            </a>
-                        @endforeach
-
-                    </div>
-                </div>
-
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">Top 5 Writers</p>
-                    {{--  --}}
-                    <div class="content flex justify-between py-2 w-full">
-                        <div class="px-2 justify-between">
-                            Name
-
-                        </div>
-                        <div class="justify-between">
-                            Posts Count
-                        </div>
-                    </div>
-                    @forelse ($top_users as $top)
-                        <div class="my-1.5 py-3	px-4 flex justify-center rounded-lg shadow-lg bg-white w-full ">
-                            <img class="w-10 h-10 rounded-full" src="{{ $top->avatar }}" alt="">
-                            <div class="content flex justify-between py-2 w-full">
-                                <div class="px-2 justify-between">
-                                    {{ $top->name }}
-                                </div>
-                                <div class="justify-between">
-                                    {{ $top->posts_count }}
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        No Members !
-                    @endforelse
-                </div>
-
-            </aside>
-        @endif
-
-
     </div>
 
-    <footer class="w-full border-t bg-white pb-12">
+    {{-- MAIN CONTENT + SIDEBAR --}}
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        <div class="flex flex-col lg:flex-row gap-8">
 
-        <div class="w-full container mx-auto flex flex-col items-center">
-            <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between py-6">
+            {{-- MAIN CONTENT --}}
+            {{ $slot }}
+
+            {{-- SIDEBAR --}}
+            @if (!request()->routeIs('page.show'))
+                <aside class="w-full lg:w-1/3 flex flex-col space-y-6 lg:top-24 lg:self-start">
+
+                    {{-- About --}}
+                    <div class="bg-white rounded-xl border shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">About Us</h3>
+                        <p class="text-gray-600 text-sm">{{ $setting->about }}</p>
+                    </div>
+
+                    {{-- Tags --}}
+                    <div class="bg-white rounded-xl border shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Tags</h3>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach ($tags as $tag)
+                                <a href="{{ route('tag.show', $tag->name) }}"
+                                    class="px-3 py-1 text-xs border rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100">
+                                    #{{ $tag->name }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Top Writers --}}
+                    <div class="bg-white rounded-xl border shadow-sm p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Writers</h3>
+
+                        @forelse ($top_users as $top)
+                            <div class="flex items-center gap-3 py-2">
+                                <img src="{{ $top->avatar }}" class="w-10 h-10 rounded-full object-cover border">
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-800 font-medium">{{ $top->name }}</p>
+                                </div>
+                                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                                    {{ $top->posts_count }} posts
+                                </span>
+                            </div>
+                        @empty
+                            <p class="text-sm text-gray-500">No writers found.</p>
+                        @endforelse
+                    </div>
+
+                </aside>
+            @endif
+
+        </div>
+    </div>
+
+    {{-- FOOTER --}}
+    <footer class="bg-white border-t mt-10">
+        <div class="max-w-7xl mx-auto px-6 py-8 text-center text-sm text-gray-600">
+            <p class="mb-4">
                 @foreach ($pages_footer as $page)
-                    <a href="{{ route('page.show', $page->slug) }}"
-                        class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
+                    <a href="{{ route('page.show', $page->slug) }}" class="px-3 hover:text-gray-800">
+                        {{ $page->name }}
+                    </a>
                 @endforeach
-            </div>
-            <div class="uppercase pb-6">&copy; {{ $setting->copy_rights }}</div>
+            </p>
+
+            <p class="text-gray-500 text-xs">
+                &copy; {{ $setting->copy_rights }}
+            </p>
         </div>
     </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 </body>
 
 </html>

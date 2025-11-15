@@ -9,8 +9,9 @@ class TagController extends Controller
 {
     public function getPostsPerTags($tag)
     {
-        $tags = Tag::whereName($tag)->firstOrFail()->publishedPosts();
+        $posts = Tag::whereName($tag)->firstOrFail()
+            ->publishedPosts()->latest()->paginate(config('app.num_items_per_page'));
 
-        return view('front.tag', compact('tags', 'tag'));
+        return view('front.tag', compact('posts', 'tag'));
     }
 }

@@ -13,9 +13,9 @@ class PostController extends Controller
     {
         // I've Pass Slug to Get the Category per it's Slug
         $post = Post::with(['category', 'user', 'comments.user'])
-        ->whereStatus(true)->whereSlug($slug)->firstOrFail();
+        ->whereStatus(true)->whereSlug($slug)
+        ->firstOrFail();
 
-        $comments = $post->comments;
         $post_title = $post->title;
 
         if (!Cookie::get('post_viewed_' . $post->id)) {
@@ -25,7 +25,7 @@ class PostController extends Controller
             Cookie::queue('post_viewed_' . $post->id, true, 60 * 24);
         }
 
-        return view('front.post', compact('post', 'post_title', 'comments'));
+        return view('front.post', compact('post', 'post_title'));
     }
 
 }
