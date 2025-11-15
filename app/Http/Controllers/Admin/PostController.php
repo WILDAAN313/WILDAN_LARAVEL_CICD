@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\PostRequest;
-use App\Http\Requests\Admin\SearchRequest;
-use App\Models\Category;
-use App\Models\Post;
-use App\Models\Tag;
+use App\Http\Requests\Admin\{PostRequest, SearchRequest};
+use App\Models\{Category, Post, Tag};
 use App\Traits\SlugCreater;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -20,7 +16,7 @@ class PostController extends Controller
     {
         $this->authorizeResource(Post::class, 'post');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -107,7 +103,10 @@ class PostController extends Controller
         }
 
         $post->update($post_data);
-        $post->tags()->sync($request->tags);
+
+        if ($request->has('tags')) {
+            $post->tags()->sync($request->tags);
+        }
 
         return to_route('admin.post.index')->with('message', trans('admin.post_updated'));
     }

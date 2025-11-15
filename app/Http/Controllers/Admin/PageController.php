@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PageRequest;
 use Illuminate\Http\Request;
 use App\Models\Page;
-use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
