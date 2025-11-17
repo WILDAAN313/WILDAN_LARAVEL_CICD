@@ -49,8 +49,6 @@
                         </div>
                 </div>
 
-                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-
                 <div
                     class="sticky bottom-0 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-t border-gray-100 -mx-6 md:-mx-8 px-6 md:px-8 py-4">
                     <div class="flex items-center justify-end gap-3">

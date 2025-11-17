@@ -29,7 +29,17 @@ class CategoryRequest extends FormRequest
             'name' => ['required', 'min:3', 'max:25', Rule::unique('categories')->ignore($this?->category?->id)],
             'slug' => ['required', Rule::unique('categories')->ignore($this?->category?->id)],
             'parent_id' => ['nullable', 'exists:categories,id'],
-            'user_id' => ['required', 'exists:users,id', new Authcheck]
         ];
+    }
+
+    public function validated($key = null, $default = null)
+    {
+        $data = parent::validated();
+
+        if ($this->isMethod('post')) {
+            $data['user_id'] = auth()->id();
+        }
+
+        return $data;
     }
 }

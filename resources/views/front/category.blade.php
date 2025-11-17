@@ -7,7 +7,7 @@
             <h2 class="text-2xl font-semibold text-gray-800">
                 Category: <span class="font-bold">{{ $category_name }}</span>
             </h2>
-            @if ($postsCount > 0)
+            @if ($posts_count > 0)
                 <p class="text-sm text-gray-500 mt-1">
                     {{ $posts_count }} post{{ $posts_count > 1 ? 's' : '' }} in this category
                 </p>

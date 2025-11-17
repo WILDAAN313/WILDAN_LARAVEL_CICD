@@ -36,10 +36,14 @@ class PageRequest extends FormRequest
         ];
     }
 
-    public function prepareForValidation()
+    public function validated($key = null, $default = null)
     {
-        $this->merge([
-            'user_id' => auth()->id()
-        ]);
+        $data = parent::validated();
+
+        if ($this->isMethod('post')) {
+            $data['user_id'] = auth()->id();
+        }
+
+        return $data;
     }
 }

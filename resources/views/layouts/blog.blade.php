@@ -33,7 +33,6 @@
 </head>
 
 <body class="bg-gray-100">
-
     {{-- Flash Messages --}}
     @if (Session::has('message') || Session::has('error'))
         <div class="max-w-7xl mx-auto px-6 mt-6" x-data="{ show: true }" x-show="show">
@@ -123,6 +122,14 @@
 
                 {{-- Auth --}}
                 @auth
+                    {{-- if user has role admin or writer --}}
+                    @can('admin-login')
+                        <a href="{{ route('admin.index') }}"
+                            class="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-sm
+              hover:bg-green-700 transition">
+                            Dashboard
+                        </a>
+                    @endcan
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button
