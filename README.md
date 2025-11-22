@@ -118,7 +118,7 @@ A gate filter is applied when logging into the admin panel:
 
 ## About Me
 
-I am a Backend Developer with 3+ years of experience, specializing in PHP and the Laravel framework. I have expertise in building RESTful APIs, working with MySQL databases, and applying software architecture patterns such as MVC and HMVC.  
+I am a Backend Developer with 4+ years of experience, specializing in PHP and the Laravel framework. I have expertise in building RESTful APIs, working with MySQL databases, and applying software architecture patterns such as MVC and HMVC.  
 
 I also have experience with TailwindCSS for modern, responsive styling and Laravel Livewire for building dynamic, reactive user interfaces. I am committed to writing clean, well-documented, and maintainable code while continuously improving my skills.  
 
