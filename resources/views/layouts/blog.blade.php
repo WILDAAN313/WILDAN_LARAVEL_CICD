@@ -66,16 +66,15 @@
                         <li>
                             <a href="{{ route('page.show', $page->slug) }}"
                                 class="transition-colors
-               {{ request()->routeIs('page.show') && request('slug') == $page->slug
-                   ? 'text-white font-semibold'
-                   : 'text-slate-100/90 hover:text-white' }}">
+                                {{ request()->routeIs('page.show') && request('slug') == $page->slug
+                                    ? 'text-white font-semibold'
+                                    : 'text-slate-100/90 hover:text-white' }}">
                                 {{ $page->name }}
                             </a>
                         </li>
                     @endforeach
                 </ul>
             </div>
-
 
             <div class="flex items-center gap-4">
 
@@ -122,40 +121,45 @@
 
                 {{-- Auth --}}
                 @auth
-                    {{-- if user has role admin or writer --}}
+                    {{-- Admin Dashboard --}}
                     @can('admin-login')
                         <a href="{{ route('admin.index') }}"
-                            class="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg shadow-sm
-              hover:bg-green-700 transition">
+                            class="px-4 py-2 bg-green-500 text-white text-sm font-semibold rounded-lg shadow-sm
+                        hover:bg-green-600 transition">
                             Dashboard
                         </a>
                     @endcan
+
+                    {{-- Logout --}}
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button
-                            class="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow
-                   hover:bg-red-700 transition">
+                            class="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg shadow
+                        hover:bg-red-600 transition">
                             Logout
                         </button>
                     </form>
                 @else
+                    {{-- Register --}}
                     <a href="{{ route('register') }}"
-                        class="px-4 py-2 bg-white text-blue-600 text-sm font-semibold rounded-lg shadow-sm
-              hover:bg-slate-100 transition">
+                        class="px-4 py-2 bg-blue-100 text-blue-800 text-sm font-semibold rounded-lg shadow-sm
+                    hover:bg-blue-200 transition">
                         Register
                     </a>
 
+                    {{-- Login --}}
                     <a href="{{ route('login') }}"
-                        class="px-4 py-2 bg-blue-700 text-white text-sm font-semibold rounded-lg shadow
-              hover:bg-blue-800 transition">
+                        class="px-4 py-2 bg-blue-500 text-white text-sm font-semibold rounded-lg shadow
+hover:bg-blue-400 transition">
                         Login
                     </a>
-                @endauth
 
+                @endauth
 
             </div>
         </div>
     </nav>
+
 
     {{-- Site Header --}}
     <header class="bg-white border-b">

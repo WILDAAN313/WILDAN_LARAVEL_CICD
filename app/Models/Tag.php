@@ -18,7 +18,7 @@ class Tag extends Model
     // I use this function to get Active Posts in the current Tag
     public function publishedPosts()
     {
-        return SELF::posts()->with(['user', 'category'])->whereStatus(true);
+        return $this->posts()->with(['user', 'category'])->published();
     }
 
     public function countTagsForPublishedPosts()

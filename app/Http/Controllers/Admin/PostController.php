@@ -59,8 +59,7 @@ class PostController extends Controller
         $post_data = $request->safe()->except('image');
 
         if ($request->hasfile('image')) {
-            $get_file = $request->file('image')->store('images/posts');
-            $post_data['image'] = $get_file;
+            $post_data['image'] = $request->file('image')->store('images/posts');
         }
 
         $post = Post::create($post_data);
@@ -98,8 +97,7 @@ class PostController extends Controller
         $post_data = $request->safe()->except('image');
 
         if ($request->hasfile('image')) {
-            $get_file = $request->file('image')->store('images/posts');
-            $post_data['image'] = $get_file;
+            $post_data['image'] = $request->file('image')->store('images/posts');
         }
 
         $post->update($post_data);

@@ -31,8 +31,7 @@ class AccountController extends Controller
         $data = $request->safe()->except('avatar');
 
         if ($request->hasfile('avatar')) {
-            $get_file = $request->file('avatar')->store('images/profiles');
-            $data['avatar'] = $get_file;
+            $data['avatar'] = $request->file('avatar')->store('images/profiles');
         }
 
         $user->update($data);

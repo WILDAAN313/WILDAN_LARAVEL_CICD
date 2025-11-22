@@ -1,5 +1,6 @@
 <x-blog-layout title="{{ $category_name }}">
 
+    <section class="w-full lg:w-2/3 flex flex-col">
     <div class="space-y-6">
 
         {{-- Category header --}}
@@ -15,8 +16,8 @@
         </header>
 
         <!-- Posts Section -->
-        <x-post-list :posts="$posts" />
-
-    </div>
+            <x-post-list :posts="$posts" />
+        </div>
+    </section>
 
 </x-blog-layout>
