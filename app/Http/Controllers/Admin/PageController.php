@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PageRequest;
 use Illuminate\Http\Request;
 use App\Models\Page;
-use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
@@ -15,7 +14,7 @@ class PageController extends Controller
 
     public function index()
     {
-        $pages = Page::with('user:id,name')->orderBy('id', 'desc')->paginate(15);
+        $pages = Page::with('user:id,name')->latest()->paginate(15);
 
         return view('admin.page.index', compact('pages'));
     }

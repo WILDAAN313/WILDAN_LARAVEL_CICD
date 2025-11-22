@@ -16,6 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Blog CMS'),
+    'num_items_per_page' => env('NUM_ITEMS_PER_PAGE', 15),
 
     /*
     |--------------------------------------------------------------------------

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\PostRequest;
-use App\Models\Category;
-use App\Models\Post;
-use App\Models\Tag;
+use App\Http\Requests\Admin\{PostRequest, SearchRequest};
+use App\Models\{Category, Post, Tag};
 use App\Traits\SlugCreater;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -19,6 +16,7 @@ class PostController extends Controller
     {
         $this->authorizeResource(Post::class, 'post');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +24,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['category:id,name', 'user:id,name', 'tags:id,name'])->latest()->paginate(15);
+        $posts = Post::with([
+            'category:id,name',
+            'user:id,name',
+            'tags' => function ($query) {
+                $query->take(2);
+            },
+        ])->withCount(['comments', 'tags'])->latest()->paginate(15);
 
         return view('admin.post.index', compact('posts'));
     }
@@ -38,8 +42,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        $tags = Tag::all();
+        $categories = Category::pluck('name', 'id')->toArray();
+        $tags = Tag::pluck('name', 'id')->toArray();
 
         return view('admin.post.create', compact('categories', 'tags'));
     }
@@ -55,8 +59,7 @@ class PostController extends Controller
         $post_data = $request->safe()->except('image');
 
         if ($request->hasfile('image')) {
-            $get_file = $request->file('image')->store('images/posts');
-            $post_data['image'] = $get_file;
+            $post_data['image'] = $request->file('image')->store('images/posts');
         }
 
         $post = Post::create($post_data);
@@ -76,8 +79,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories = Category::all();
-        $tags = Tag::all();
+        $categories = Category::pluck('name', 'id')->toArray();
+        $tags = Tag::pluck('name', 'id')->toArray();
 
         return view('admin.post.edit', compact('post', 'categories', 'tags'));
     }
@@ -94,12 +97,14 @@ class PostController extends Controller
         $post_data = $request->safe()->except('image');
 
         if ($request->hasfile('image')) {
-            $get_file = $request->file('image')->store('images/posts');
-            $post_data['image'] = $get_file;
+            $post_data['image'] = $request->file('image')->store('images/posts');
         }
 
         $post->update($post_data);
-        $post->tags()->sync($request->tags);
+
+        if ($request->has('tags')) {
+            $post->tags()->sync($request->tags);
+        }
 
         return to_route('admin.post.index')->with('message', trans('admin.post_updated'));
     }
@@ -124,16 +129,18 @@ class PostController extends Controller
         return response()->json(['slug' => $slug]);
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        $searched_text = $request->input('search');
+        $searchedText = $request->validated()['search'];
 
-        $posts = Post::query()->with(['category', 'user', 'tags'])
-            ->where('title', 'LIKE', "%{$searched_text}%")
-            ->orWhere('content', 'LIKE', "%{$searched_text}%")
-            ->paginate(10);
+        $posts = Post::query()
+            ->with(['category', 'user', 'tags'])
+            ->where(function ($query) use ($searchedText) {
+                $query->where('title', 'LIKE', "%{$searchedText}%")
+                    ->orWhere('content', 'LIKE', "%{$searchedText}%");
+            })->paginate(10);
 
-        // Return the search view with the resluts
+        // Return the search view with the results
         return view('admin.post.search', compact('posts'));
     }
 }

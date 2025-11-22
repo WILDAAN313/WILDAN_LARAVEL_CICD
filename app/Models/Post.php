@@ -13,6 +13,10 @@ class Post extends Model
     use HasFactory;
     protected $fillable = ['title', 'content', 'image', 'category_id', 'user_id', 'slug', 'status'];
 
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
     protected function createdAt(): Attribute
     {
         return Attribute::make(

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateAccountRequest;
-use Illuminate\Support\Facades\Storage;
 
 class AccountController extends Controller
 {
@@ -32,8 +31,7 @@ class AccountController extends Controller
         $data = $request->safe()->except('avatar');
 
         if ($request->hasfile('avatar')) {
-            $get_file = $request->file('avatar')->store('images/profiles');
-            $data['avatar'] = $get_file;
+            $data['avatar'] = $request->file('avatar')->store('images/profiles');
         }
 
         $user->update($data);

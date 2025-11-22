@@ -29,13 +29,17 @@ class BlogLayout extends Component
      */
     public function render()
     {
-        $categories = Category::select('id', 'name', 'slug')->get();
+        $categories = Category::whereNull('parent_id')
+            ->with('childrenRecursive')
+            ->orderBy('name')
+            ->get();
         $top_users = User::withCount('posts')->orderByDesc('posts_count')->take(5)->get();
         $setting = Setting::first();
-        $pages_nav = Page::select('id', 'name', 'slug')->whereNavbar(true)->orderByDesc('id')->get();
-        $pages_footer = Page::select('id', 'name', 'slug')->whereFooter(true)->orderByDesc('id')->get();
+        $pages = Page::select('id', 'name', 'slug', 'navbar', 'footer')->latest('id')->get();
+        $pages_nav = $pages->where('navbar', true);
+        $pages_footer = $pages->where('footer', true);
         $tags = Tag::whereHas('posts', function ($q) {
-            $q->where('status', true);
+            $q->published();
         })->get();
 
         return view('layouts.blog', compact('categories', 'top_users', 'setting', 'pages_nav', 'pages_footer', 'tags'));

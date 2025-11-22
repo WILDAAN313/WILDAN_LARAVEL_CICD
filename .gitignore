@@ -16,3 +16,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+phpunit.xml.bak
+npm-debug.log
+yarn-error.log

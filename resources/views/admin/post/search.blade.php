@@ -1,90 +1,138 @@
 <x-admin-layout>
-
-    <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
-        <main class="w-full flex-grow p-6">
-            <h1 class="w-full text-3xl text-black pb-6">Posts</h1>
-
-            <div class="w-full mt-12">
-                <p class="text-xl pb-3 flex items-center">
-                    <i class="fas fa-list mr-3"></i> Search Results
-                </p>
-                @if($posts->isNotEmpty())
-                <div class="w-full bg-white text-left p-4 mb-2">Found {{ $posts->total() }} Records in Posts</div>
-                <div class="bg-white overflow-auto">
-                    <table class="text-left w-full border-collapse">
-                        <thead>
-                            <tr>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    ID</th>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    Title</th>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    Category</th>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    Tags</th>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    Added by</th>
-                                <th
-                                    class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
-                                    Manage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($posts as $post)
-                                <tr class="hover:bg-grey-lighter">
-                                    <td class="py-4 px-6 border-b border-grey-light">{{ $post->id }}</td>
-                                    <td class="py-4 px-6 border-b border-grey-light">{{ $post->title }}</td>
-                                    <td class="py-4 px-6 border-b border-grey-light">{{ $post->category->name }}</td>
-                                    <td class="py-4 px-6 border-b border-grey-light">
-                                        <div class="flex flex-wrap">
-                                            @forelse ($post->tags as $tag)
-                                                <a href="{{ route('tag.show', $tag->name) }}"
-                                                    class="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-blue-700 bg-blue-100 border border-blue-300 ">
-                                                    <div
-                                                        class="text-xs font-normal leading-none max-w-full flex-initial">
-                                                        {{ $tag->name }}</div>
-                                                </a>
-                                            @empty
-                                                No Tags !
-                                            @endforelse
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-6 border-b border-grey-light">{{ $post->user->name }}</td>
-                                    <td class="py-4 px-6 border-b border-grey-light">
-                                        @can('update', $post)
-                                            <button
-                                                class="px-4 py-1 text-white font-light tracking-wider bg-green-600 rounded"
-                                                type="button"
-                                                onclick="location.href='{{ route('admin.post.edit', $post->id) }}';">Edit</button>
-                                        @endcan
-                                        @can('delete', $post)
-                                            <form type="submit" method="POST" style="display: inline"
-                                                action="{{ route('admin.post.destroy', $post->id) }}"
-                                                onsubmit="return confirm('Are you sure?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button
-                                                    class="px-4 py-1 text-white font-light tracking-wider bg-red-600 rounded"
-                                                    type="submit">Delete</button>
-                                            </form>
-                                        @endcan
-
-
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+    <div class="w-full min-h-screen bg-gray-50 flex flex-col">
+        <main class="flex-grow p-8">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-semibold text-gray-800">Posts</h1>
+                    <p class="text-gray-500">Search results in posts.</p>
                 </div>
-                {!! $posts->links() !!}
-                @else
-                <div class="w-full bg-red-500 text-left p-4 mb-2 text-white">Sorry No Results Founded, try again..</div>
-                @endif
+
+                <a href="{{ route('admin.post.index') }}"
+                   class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-200 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Posts
+                </a>
+            </div>
+
+            @if ($posts->isNotEmpty())
+                <!-- Result summary -->
+                <div class="mb-4 flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                    <i class="fas fa-search"></i>
+                    <span>
+                        Found
+                        <span class="font-semibold">{{ $posts->total() }}</span>
+                        result(s) in posts.
+                    </span>
+                </div>
+
+                <!-- Table Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm text-gray-700">
+                            <thead class="bg-gray-100 text-gray-700 uppercase text-xs font-semibold tracking-wider">
+                                <tr>
+                                    <th class="py-4 px-6">#</th>
+                                    <th class="py-4 px-6">Title</th>
+                                    <th class="py-4 px-6">Category</th>
+                                    <th class="py-4 px-6">Tags</th>
+                                    <th class="py-4 px-6">Added By</th>
+                                    <th class="py-4 px-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach ($posts as $post)
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <!-- ID -->
+                                        <td class="py-3 px-6 font-medium text-gray-800">
+                                            {{ $post->id }}
+                                        </td>
+
+                                        <!-- Title -->
+                                        <td class="py-3 px-6">
+                                            <div class="max-w-xs truncate" title="{{ $post->title }}">
+                                                {{ $post->title }}
+                                            </div>
+                                        </td>
+
+                                        <!-- Category -->
+                                        <td class="py-3 px-6">
+                                            @if ($post->category)
+                                                <span
+                                                    class="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-purple-50 text-purple-700">
+                                                    <i class="fas fa-folder-open mr-1"></i> {{ $post->category->name }}
+                                                </span>
+                                            @else
+                                                <span class="text-gray-400 text-xs">—</span>
+                                            @endif
+                                        </td>
+
+                                        <!-- Tags -->
+                                        <td class="py-3 px-6">
+                                            <div class="flex flex-wrap gap-1">
+                                                @forelse ($post->tags as $tag)
+                                                    <a href="{{ route('tag.show', $tag->name) }}"
+                                                       class="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition">
+                                                        <i class="fas fa-tag mr-1"></i>{{ $tag->name }}
+                                                    </a>
+                                                @empty
+                                                    <span class="text-gray-400 text-xs">No tags</span>
+                                                @endforelse
+                                            </div>
+                                        </td>
+
+                                        <!-- Added By -->
+                                        <td class="py-3 px-6">
+                                            {{ optional($post->user)->name ?? '—' }}
+                                        </td>
+
+                                        <!-- Actions -->
+                                        <td class="py-3 px-6 text-right space-x-2 whitespace-nowrap">
+                                            @can('update', $post)
+                                                <a href="{{ route('admin.post.edit', $post->id) }}"
+                                                   class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition">
+                                                    <i class="fas fa-edit mr-1"></i> Edit
+                                                </a>
+                                            @endcan
+
+                                            @can('delete', $post)
+                                                <form method="POST" class="inline"
+                                                      action="{{ route('admin.post.destroy', $post->id) }}"
+                                                      onsubmit="return confirm('Are you sure you want to delete this post?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 transition">
+                                                        <i class="fas fa-trash mr-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                        {!! $posts->links() !!}
+                    </div>
+                </div>
+            @else
+                <!-- Empty state -->
+                <div
+                    class="flex flex-col items-center justify-center rounded-xl border border-red-100 bg-red-50 px-6 py-10 text-center text-red-700">
+                    <i class="fas fa-search-minus text-3xl mb-3"></i>
+                    <h2 class="text-lg font-semibold mb-1">No results found</h2>
+                    <p class="text-sm mb-3">Sorry, we couldn't find any posts matching your search. Try adjusting your filters or keywords.</p>
+                    <a href="{{ route('admin.post.index') }}"
+                       class="inline-flex items-center px-4 py-2 bg-white text-red-700 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-100 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Posts
+                    </a>
+                </div>
+            @endif
         </main>
     </div>
 </x-admin-layout>

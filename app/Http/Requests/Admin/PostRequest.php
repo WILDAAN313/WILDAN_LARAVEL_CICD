@@ -32,14 +32,17 @@ class PostRequest extends FormRequest
             'status' => ['required', 'boolean'],
             'image' => ['image', 'mimes:jpeg,png,jpg', 'max:2048', Rule::requiredIf(!$this?->post?->id)],
             'tags' => ['exists:tags,id'],
-            'user_id' => ['required', 'exists:users,id']
         ];
     }
 
-    public function prepareForValidation()
+    public function validated($key = null, $default = null)
     {
-        $this->merge([
-            'user_id' => auth()->id()
-        ]);
+        $data = parent::validated();
+
+        if ($this->isMethod('post')) {
+            $data['user_id'] = auth()->id();
+        }
+
+        return $data;
     }
 }

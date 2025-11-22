@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{Role, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('role')->orderBy('id', 'desc')->paginate(15);
+        $users = User::with('role')->latest()->paginate(15);
 
         return view('admin.user.index', compact('users'));
     }
@@ -31,7 +29,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::all();
+        $roles = Role::select('id', 'name')->pluck('name', 'id')->toArray();
 
         return view('admin.user.edit', compact('user', 'roles'));
     }
@@ -46,8 +44,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate(['role_id' => 'required|exists:roles,id']);
-        $user->role_id = $validated['role_id'];
-        $user->update();
+        $user->update($validated);
 
         return to_route('admin.user.index')->with('message', trans('admin.role_updated'));
     }

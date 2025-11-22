@@ -18,7 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('user:id,name')->get();
+        $categories = Category::with('user:id,name', 'parent:id,name')
+            ->withCount('children')->orderBy('name')->get();
 
         return view('admin.category.index', compact('categories'));
     }
@@ -30,7 +31,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.category.create');
+        $categories = Category::pluck('name', 'id')->toArray();
+
+        return view('admin.category.create', compact('categories'));
     }
 
     /**
@@ -65,7 +68,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('admin.category.edit', compact('category'));
+        $categories = Category::where('id', '!=', $category->id)->pluck('name', 'id')->toArray();
+
+        return view('admin.category.edit', compact('category', 'categories'));
     }
 
     /**
